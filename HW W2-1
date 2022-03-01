@@ -1,0 +1,112 @@
+//
+//  main.c
+//  HW W2-1
+//
+//  Created by 孫渝鈞 on 2022/3/1.
+//
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#define pathlen 250
+#define File 250
+#define Txt 4095
+#define Txtlen 110
+
+char file[File][pathlen]; //全域變數
+int filecount=0;
+
+char txt[Txt][Txtlen];
+
+int token1(char *str){
+    char *start=str;
+    char delimeters[]=" ";
+    start=strtok(start,delimeters);
+    while(start!=NULL){
+        strcpy(file[filecount],start);
+        filecount++;
+        assert(filecount<File);
+        start=strtok(NULL,delimeters);
+    }
+    /*for(int i=0;i<filecount;i++){
+        printf("%s\n",file[i]);
+    }*/
+
+    return 0;
+}
+char *strrpc(char *str,char *oldstr,char *newstr){
+    char bstr[strlen(str)];//轉換緩衝區
+    memset(bstr,0,sizeof(bstr));
+ 
+    for(int i = 0;i < strlen(str);i++){
+        if(!strncmp(str+i,oldstr,strlen(oldstr))){//查詢目標字串
+            strcat(bstr,newstr);
+            i += strlen(oldstr) - 1;
+        }else{
+            strncat(bstr,str + i,1);//儲存一位元組進緩衝區
+        }
+    }
+
+    strcpy(str,bstr);
+    return str;
+}
+
+int str(char *str1,char *str2){
+    
+    char *ptr=strstr(str1,str2);
+    if(ptr==NULL){  //沒有
+        //printf("沒有\n");
+    }
+    else{  //有
+        //printf("有\n");
+        char *str3 = strrpc(str1,file[0],file[1]);
+        printf("%s",str3);
+    }
+    return 0;
+}
+
+int main(){
+    
+    char pathname[pathlen];
+    fgets(pathname,1000,stdin);
+    token1(pathname);
+    int check=-1; //初始check最後一個單字是否為-i
+    //假設最後一個單字是-i
+    check=strcmp(file[filecount-1],"-i");
+    //假設最後一個單字是-i
+    int i=0;
+    int n=0;
+    if(check==0){
+        
+    }
+    //假設最後一個單字不是-i
+    else{
+        char str2=getchar();
+        while(str2!=EOF){
+           if((str2>=48&&str2<=57)||(str2>=65&&str2<=90)||(str2>=97&&str2<=122)||str2=='-'){
+                txt[i][n]=str2;
+                n++;
+                str2=getchar();
+                if((str2<48||(str2>57&&str2<65)||(str2>90&&str2<97)||str2>122)&&str2!='-'){
+                    
+                    i++;
+                    n=0;
+                    str2=getchar();
+                }
+            }
+           else{ //下一個要切
+               str2=getchar();
+           }
+        }
+   }
+    //for(int j=0;j<i;j++){
+        //printf("%s\n",txt[j]);
+        //printf("%s\n",file[0]);
+        str(txt[6],file[0]);
+        
+    //}
+
+    
+    return 0;
+}
