@@ -1,0 +1,68 @@
+//
+//  main.c
+//  HW W5-1
+//
+//  Created by 孫渝鈞 on 2022/3/22.
+//
+#include <stdio.h>
+#include <math.h>
+
+typedef struct polynomial{
+    long cof;           //係數
+    long exp;           //次方
+    
+}polynomial_t;
+
+polynomial_t polynomial[100000];
+int main() {
+    
+    long numberterms;   //有幾項多項式
+    scanf("%ld",&numberterms);
+    
+    while(numberterms<=0){
+        printf("The number must be greater than zero!\n");
+        scanf("%ld",&numberterms);
+    }
+    
+    for(long i=0;i<numberterms;i++){
+        scanf("%ld",&polynomial[i].cof);
+        while(polynomial[i].cof<=0){
+            printf("The number must be greater than zero!\n");
+            scanf("%ld",&polynomial[i].cof);
+        }
+        scanf("%ld",&polynomial[i].exp);
+        
+    }
+    
+    for(long i=0;i<numberterms;i++){      //印出3x^2 + 2x^1 =
+        printf("%ldx^%ld",polynomial[i].cof,polynomial[i].exp);
+        if(i==numberterms-1){
+            printf(" =\n");
+        }
+        else{
+            printf(" + ");
+        }
+    }
+    
+    long time;       //要執行幾次
+    scanf("%ld",&time);
+    while(time<=0){
+        printf("The number must be greater than zero!\n");
+        scanf("%ld",&time);
+    }
+    
+    long x[time];   //要帶入的值
+    for(long i=0;i<time;i++){
+        long sum=0;
+        scanf("%ld",&x[i]);
+        while(x[i]<=0){
+            printf("The number must be greater than zero!\n");
+            scanf("%ld",&x[i]);
+        }
+        for(long j=0;j<numberterms;j++){
+            sum+=(pow(x[i],polynomial[j].exp))*polynomial[j].cof;
+        }
+        printf("%ld\n",sum);
+    }
+    return 0;
+}
