@@ -1,0 +1,59 @@
+//
+//  main.c
+//  Bonus1
+//
+//  Created by 孫渝鈞 on 2022/3/25.
+//
+
+#include <stdio.h>
+
+int n,m;
+int dirs[4][2] = {
+    {1,0}, {-1,0}, {0,-1}, {0,1}
+};
+
+void explore(int x,int y,char map[n][m]){
+    
+    for(int i=0;i<=3;i++){// 考慮 (x,y) 周圍上、下、左、右四個方向
+        if(map[x+dirs[i][0]] [y+dirs[i][1]]=='.'){
+            if(x+dirs[i][0]>=0 && x+dirs[i][0]<n && y+dirs[i][1]>=0 && y+dirs[i][1]<m){
+                map[x+dirs[i][0]] [y+dirs[i][1]]='@';    //標記已訪問過了
+                explore( x+dirs[i][0], y+dirs[i][1] ,map);
+            }
+        }
+    }
+}
+
+
+int main() {
+    
+    
+    scanf("%d %d",&n,&m);
+    int room=0;
+    char map[n][m];
+    
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            scanf(" %c",&map[i][j]);   //輸入要用" %c"
+        }
+    }
+    
+
+    
+    for(int i=0;i<n;i++){      //map開始每個點檢查
+        for(int j=0;j<m;j++){
+            
+            if(map[i][j]=='.'){
+                explore(i,j,map);
+                room++;
+            }
+        }
+    }
+    
+    if(n>=1&&m<=1000){
+        printf("%d\n",room);
+    }
+ 
+    return 0;
+}
+
