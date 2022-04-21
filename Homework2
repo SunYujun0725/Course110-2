@@ -1,0 +1,144 @@
+//
+//  main.c
+//  Homework5
+//
+//  Created by 孫渝鈞 on 2022/4/19.
+//
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define size 49
+int number_of_course;
+
+struct course{
+    int ID;
+    int N;
+    int P;
+    char *name;
+    struct course *next;
+    struct course *prior;
+    struct course *connect;
+};
+struct course *first=NULL,*temp=NULL;
+
+char *Name=NULL;
+int id,n,p;
+
+//找對應相同id的位置
+struct course *search_list(struct course *list,int id){
+    struct course *p;
+    for(p=list;p!=NULL;p=p->connect){
+        if(p->ID==id){
+            return p;
+        }
+    }
+    return NULL;
+}
+
+//建雙向linked list
+struct course *add_to_list(void){
+    struct course *temp2;
+    temp2=first;
+    for(int i=0;i<number_of_course;i++){
+        //printf("%d\n",temp2->N);
+        temp2->next=search_list(first,temp2->N);
+        temp2=temp2->connect;
+    }
+    temp2=first;
+    for(int i=0;i<number_of_course;i++){
+        temp2->prior=search_list(first,temp2->P);
+        temp2=temp2->connect;
+        
+    }
+    return temp2;
+}
+
+//連接所有node
+struct course *con(struct course *new_node,struct course *temp){
+    for(int i=1;i<number_of_course;i++){
+        Name=malloc(size*sizeof(char *));
+        scanf("%d %d %d %s",&id,&n,&p,Name);
+        if(i==number_of_course-1){
+            new_node->ID=id;
+            new_node->name=Name;
+            new_node->N=n;
+            new_node->P=p;
+            temp->connect=new_node;
+            temp=new_node;
+            temp->connect=NULL;
+            //printf("%d %d\n",new_node->N,new_node->P);
+            
+        }
+        else{
+            new_node->ID=id;
+            new_node->name=Name;
+            new_node->N=n;
+            new_node->P=p;
+            temp->connect=new_node;
+            temp=new_node;
+            //printf("%lld\n",temp);
+            //printf("%s\n",new_node->name);
+            new_node=malloc(sizeof(struct course));
+            //printf("%lld\n",new_node);
+        }
+    }
+    //printf("%d %d\n",first->ID,first->connect->ID);
+    //printf("%s %s %d %d\n",first->name,first->connect->name,first->connect->connect->P,first->connect->connect->connect->P);
+    return 0;
+}
+
+int main(int argc, const char * argv[]) {
+    
+    scanf("%d",&number_of_course);
+    Name=malloc(size*sizeof(char *));
+    
+    scanf("%d %d %d %s",&id,&n,&p,Name);
+    struct course *new_node;
+    new_node=malloc(sizeof(struct course));
+    new_node->ID=id;
+    new_node->name=Name;
+    new_node->N=n;
+    new_node->P=p;
+    first = new_node;
+    temp = first;
+    //printf("%s\n",first->name);
+    //printf("%lld %lld %lld\n",new_node,first,temp);
+    //printf("%d %d %d %s\n",first->ID,first->N,first->P,first->name);
+    new_node=malloc(sizeof(struct course));
+    //printf("%lld %lld\n",new_node,temp);
+    con(new_node,temp);
+    //printf("%s\n",first->name);
+    add_to_list();
+    
+    printf("Current Course: %s\n",first->name);
+    char setp;
+    while((setp=getchar())!='q'){   //一直做直到打出q
+        if(setp=='n'){
+            if(first->next==NULL){
+                printf("[n] Next course. [p] Prior course [q] Quit:There is no next course.\n");
+                printf("Current Course: %s\n",first->name);    //course->name
+            }
+            else{
+                printf("[n] Next course. [p] Prior course [q] Quit:Current Course: %s\n",first->next->name);
+                first=first->next;
+            }
+        }
+        else if(setp=='p'){
+            if(first->prior==NULL){
+                printf("[n] Next course. [p] Prior course [q] Quit:There is no previous course.\n");
+                printf("Current Course: %s\n",first->name);
+            }
+            else{
+                printf("[n] Next course. [p] Prior course [q] Quit:Current Course: %s\n",first->prior->name);
+                first=first->prior;
+            }
+        }
+        
+    }
+    printf("[n] Next course. [p] Prior course [q] Quit:\n");
+    
+    free(new_node);
+    free(Name);
+    return 0;
+}
